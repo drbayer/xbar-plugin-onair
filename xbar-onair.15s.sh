@@ -11,14 +11,17 @@
 #  <xbar.dependencies>python3,virtualenv</xbar.dependencies>
 #  <xbar.abouturl>http://url-to-about.com/</xbar.abouturl>
 # 
-#  <xbar.var>string(ONAIR_LIGHTS=first): Which lights to control. Defaults to first found.</xbar.var>
+#  <xbar.var>string(ONAIR_LIGHTS="first"): Addresses of lights to control. Defaults to first bulb found on network.</xbar.var>
 #  <xbar.var>boolean(ONAIR_OFFAIR_LIGHTON=false): Should the light be turned on when not in a meeting?</xbar.var>
-# 
+#  <xbar.var>string(ONAIR_ONAIR_COLOR="ff0000"): Hex code for bulb color when on-air. Defaults to red.</xbar.var>
+#  <xbar.var>number(ONAIR_ONAIR_BRIGHTNESS=255): Brightness level when on-air. Range is 0-255.</xbar.var>
+#  <xbar.var>string(ONAIR_OFFAIR_COLOR="00ff00"): Hex code for bulb color when off-air. Defaults to green.</xbar.var>
+#  <xbar.var>number(ONAIR_OFFAIR_BRIGHTNESS=255): Brightness level when off-air. Range is 0-255.</xbar.var>
 #
 # Use Magic Hue smart light bulbs to indicate when you are in a Zoom meeting.
 #
-# bitbar-onair.py built from original work by Tim Toll.
-# bitbar-onair.15s.sh borrowed from Paul (infothrill) https://github.com/infothrill/bitbar-plugin-pingdom/blob/master/bitbar-pingdom.60s.sh
+# xbar-onair.py built from original work by Tim Toll.
+# xbar-onair.15s.sh borrowed from Paul (infothrill) https://github.com/infothrill/bitbar-plugin-pingdom/blob/master/bitbar-pingdom.60s.sh
 #
 
 SELF_PATH=$(cd -P -- "$(dirname -- "$0")" && pwd -P) && SELF_PATH=$SELF_PATH/$(basename -- "$0")
@@ -41,7 +44,7 @@ error_exit()
 	exit 1
 }
 
-PLUGIN_DIR="$(dirname "${SELF_PATH}")/bitbar-onair"
+PLUGIN_DIR="$(dirname "${SELF_PATH}")/xbar-onair"
 cd "${PLUGIN_DIR}" || error_exit "cd ${PLUGIN_DIR}"
 
 if ! test -d env; then
@@ -50,10 +53,9 @@ if ! test -d env; then
     virtualenv env
     # shellcheck disable=SC1091
     . env/bin/activate
-	pip3 install configparser
     pip3 install magichue
 fi
 # shellcheck disable=SC1091
 . env/bin/activate
 export LANG="${LANG:-en_US.UTF-8}"  # needed when printing utf-8 chars
-exec ./bitbar-onair.py
+exec ./xbar-onair.py
